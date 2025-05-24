@@ -64,7 +64,9 @@ def generate_file(app):
 		activeDoc.name() + ".sheet",
 		activeDoc.colorModel(), activeDoc.colorDepth(), activeDoc.colorProfile(),
 		300)
-	 
+
+	for node in exportDoc.topLevelNodes():
+		exportDoc.rootNode().removeChildNode(node)	 
 
 	exportLayer = exportDoc.createNode("sprites", "paintlayer")
 	exportDoc.rootNode().addChildNode(exportLayer, None)
