@@ -16,31 +16,29 @@ def generate_file(app):
 	anims = {}
 
 	frames = []
-	for layer in activeDoc.topLevelNodes():
-		if layer.animated():
-			anims[layer.name()] = {
-				"offset":len(frames),
-				"key_times":[]
-			}
-			last_frame = 0
-			total_frames = 0
-			for frame in range(activeDoc.animationLength()):
-				if layer.hasKeyframeAtTime(frame):
-					frames.append(layer.pixelDataAtTime(0, 0, frame_width, frame_height, frame))
-					total_frames += 1
-					if total_frames > 1:
-						anims[layer.name()]["key_times"].append(frame - last_frame)
-					last_frame = frame
-			# By default, the last keyframe is held for 1 frame.
-			# Use +[number] in the name of the layer to add a final keyframe time
-			anims[layer.name()]["key_times"].append(1)
-
-		else:
-			anims[layer.name()] = {
-				"offset":len(frames),
-				"key_times":[1]
-			}
-			frames.append(layer.projectionPixelData(0, 0, frame_width, frame_height))
+	def collectFrames(nodeList):
+		nonlocal frames, anims, frame_width, frame_height
+		for layer in nodeList:
+			if layer.animated():
+				anims[layer.name()] = {
+					"offset":len(frames),
+					"key_times":[]
+				}
+				last_frame = 0
+				total_frames = 0
+				for frame in range(activeDoc.animationLength()):
+					if layer.hasKeyframeAtTime(frame):
+						frames.append(layer.pixelDataAtTime(0, 0, frame_width, frame_height, frame))
+						total_frames += 1
+						if total_frames > 1:
+							anims[layer.name()]["key_times"].append(frame - last_frame)
+						last_frame = frame
+				# By default, the last keyframe is held for 1 frame.
+				# Use +[number] in the name of the layer to add a final keyframe time
+				anims[layer.name()]["key_times"].append(1)
+			elif layer.type() == 'grouplayer':
+				collectFrames(layer.childNodes())
+	collectFrames(activeDoc.topLevelNodes())
 
 	for key in list(anims):
 		values = key.split('+')

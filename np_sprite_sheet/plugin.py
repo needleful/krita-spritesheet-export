@@ -38,4 +38,5 @@ class DockerTemplate(DockWidget):
         self.folder_picker.show()
 
     def exportSprites(self, value):
+        self.folder_picker.directory = QFileInfo(value).absolutePath()
         export_spritesheet(value)
