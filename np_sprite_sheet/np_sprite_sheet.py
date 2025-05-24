@@ -57,7 +57,7 @@ def generate_file(app):
 	columns = int(math.sqrt(len(frames)))
 	rows = int(math.ceil(len(frames)/columns))
 
-	properties['size'] = [rows, columns]
+	properties['size'] = [columns, rows]
 
 	exportDoc = app.createDocument(
 		frame_width*columns, frame_height*rows,
@@ -99,7 +99,7 @@ def export_spritesheet(output_path):
 	exportDoc.exportImage(os.path.join(output_path), png)
 
 	if properties != None:
-		json_path = os.path.splitext(output_path)[0] + '.json'
+		json_path = os.path.splitext(output_path)[0] + '.sheet'
 		with open(json_path, "w", encoding="utf-8") as json_out:
 			json.dump(properties, json_out, sort_keys=True)
 
