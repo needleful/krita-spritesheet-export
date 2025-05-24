@@ -11,6 +11,7 @@ def generate_file(app):
 
 	properties = {
 		"framerate":activeDoc.framesPerSecond(),
+		"frame_size": [frame_width, frame_height]
 	}
 	anims = {}
 
@@ -98,7 +99,7 @@ def export_spritesheet(output_path):
 	exportDoc.exportImage(os.path.join(output_path), png)
 
 	if properties != None:
-		json_path = os.path.splitext(output_path)[0] + '.ss.json'
+		json_path = os.path.splitext(output_path)[0] + '.json'
 		with open(json_path, "w", encoding="utf-8") as json_out:
 			json.dump(properties, json_out, sort_keys=True)
 
